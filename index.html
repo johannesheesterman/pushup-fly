@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,body{
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:100vh;
+            width:100vw;
+            overflow:hidden;
+        }
+
+        img {
+            width:30px;
+            height:auto;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+
+        img.large {
+            height:100%;
+            width:auto;
+            transform: rotate(0deg) !important;
+            left:50% !important;
+            top:0px !important;
+            transform: translate(-50%,0) !important;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <img src ="fly.png"/>
+
+    <script>
+     
+
+        var image = document.getElementsByTagName('img')[0];
+        // Randomy move image around the screen
+        var x = Math.random() * window.innerWidth;
+        var y = Math.random() * window.innerHeight;
+        
+        var dx = 0.5;
+        var dy = 0.5;
+
+        var id = setInterval(frame, 10);
+        function frame() {
+            
+
+            if (x + image.width >= window.innerWidth || x <= 0) {
+                dx = -dx;
+            }
+            if (y + image.height >= window.innerHeight || y <= 0) {
+                dy = -dy;
+            }
+            // Rotate the image to face the direction it is moving
+            var angle = ((Math.atan2(dy,dx) * 180 / Math.PI) + 90)
+            image.style.transform = 'rotate(' + angle + 'deg)';
+
+        
+            x += dx;
+            y += dy;
+            image.style.left = x + 'px';
+            image.style.top = y + 'px';
+        }
+        
+
+        image.addEventListener('click', function(){
+            init();
+        });
+
+        function init() {
+            console.log('init');
+            playStart();
+
+            var now = new Date();
+            var delay = 60 * 60 * 1000; // 1 hour in msec
+            var start = delay - (now.getMinutes() * 60 + now.getSeconds()) * 1000 + now.getMilliseconds();
+
+            setTimeout(function pushIt() {
+                playArnold();
+                setTimeout(() => {
+                    playSong();
+                }, 3000);
+                setTimeout(pushIt, delay);
+            }, start);
+        }
+
+        function playStart() {
+            const songPath = "start.mp3";
+            var audio = new Audio(songPath);
+            audio.play();
+        }
+
+        function playArnold() {
+            const songPath = "arnold.mp3";
+            var audio = new Audio(songPath);
+            audio.play();
+        }
+
+        function playSong() {
+            image.src="fly-front.png";
+            image.classList = "large";
+
+            const songPath = "song.mp3";
+            var audio = new Audio(songPath);
+            audio.play();
+            setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                image.src="fly.png";
+                image.classList = "";
+            }, 1000 * 30);
+        }
+
+    </script>
+
+</body>
+</html>
